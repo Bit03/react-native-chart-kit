@@ -30,8 +30,8 @@ class AbstractChart extends Component {
   }
 
   renderHorizontalLabels = config => {
-    const { count, data, height, paddingTop, paddingRight, yLabelsOffset = 12 } = config
-	var decimalPlaces = (this.props.chartConfig.decimalPlaces !== undefined) ? this.props.chartConfig.decimalPlaces : 2;
+    const { count, data, height, paddingTop, paddingRight, yLabelsOffset = 4, pre } = config
+	  var decimalPlaces = (this.props.chartConfig.decimalPlaces !== undefined) ? this.props.chartConfig.decimalPlaces : 0;
     return [...new Array(count)].map((_, i) => {
       return (
         <Text
@@ -39,9 +39,9 @@ class AbstractChart extends Component {
           x={paddingRight - yLabelsOffset}
           textAnchor="end"
           y={(height * 3 / 4) - ((height - paddingTop) / count * i) + 12}
-          fontSize={12}
+          fontSize={8}
           fill={this.props.chartConfig.color(0.5)}
-        >{count === 1 ? data[0].toFixed(decimalPlaces) : ((this.calcScaler(data) / (count - 1)) * i + Math.min(...data)).toFixed(decimalPlaces)}
+        >{count === 1 ? pre + data[0].toFixed(decimalPlaces) : pre + ((this.calcScaler(data) / (count - 1)) * i + Math.min(...data)).toFixed(decimalPlaces)}
         </Text>
       )
     })
@@ -49,14 +49,13 @@ class AbstractChart extends Component {
 
   renderVerticalLabels = config => {
     const { labels = [], width, height, paddingRight, paddingTop, horizontalOffset = 0 } = config
-    const fontSize = 12
     return labels.map((label, i) => {
       return (
         <Text
           key={Math.random()}
           x={((width - paddingRight) / labels.length * (i)) + paddingRight + horizontalOffset}
           y={(height * 3 / 4) + paddingTop + (fontSize * 2)}
-          fontSize={fontSize}
+          fontSize={8}
           fill={this.props.chartConfig.color(0.5)}
           textAnchor="middle"
         >{label}
@@ -87,7 +86,7 @@ class AbstractChart extends Component {
     const { width, height, backgroundGradientFrom, backgroundGradientTo } = config
     return (
       <Defs>
-        <LinearGradient id="backgroundGradient" x1="0" y1={height} x2={width} y2={0}>
+        <LinearGradient id="backgroundGradient" x1="0" y1={0} x2={0} y2={height}>
           <Stop offset="0" stopColor={backgroundGradientFrom}/>
           <Stop offset="1" stopColor={backgroundGradientTo}/>
         </LinearGradient>

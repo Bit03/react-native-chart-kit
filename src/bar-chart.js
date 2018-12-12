@@ -6,30 +6,29 @@ import {
 } from 'react-native-svg'
 import AbstractChart from './abstract-chart'
 
-const barWidth = 32
-
 class BarChart extends AbstractChart {
   renderBars = config => {
-    const { data, width, height, paddingTop, paddingRight } = config
+    const { data, width, height, paddingRight, paddingTop } = config
     return data.map((x, i) => {
       const barHeight = height / 4 * 3 * ((x - Math.min(...data)) / this.calcScaler(data))
-      const barWidth = 32
+      const barWidth = (width - paddingRight) / data.length
       return (
         <Rect
           key={Math.random()}
-          x={(paddingRight + (i * (width - paddingRight) / data.length) + (barWidth / 2))}
+          x={(paddingRight + (i * (width - paddingRight) / data.length))}
           y={(((height / 4 * 3) - barHeight) + paddingTop)}
-          width={barWidth}
+          width={barWidth - 1}
           height={barHeight}
-          fill="url(#fillShadowGradient)"
+          fill="rgba(0, 86, 256, 0.75)"
         />)
     })
   }
 
   renderBarTops = config => {
-    const { data, width, height, paddingTop, paddingRight } = config
+    const { data, width, height, paddingRight, paddingTop } = config
     return data.map((x, i) => {
       const barHeight = height / 4 * 3 * ((x - Math.min(...data)) / this.calcScaler(data))
+      const barWidth = (width - paddingRight) / data.length
       return (
         <Rect
           key={Math.random()}
@@ -44,13 +43,14 @@ class BarChart extends AbstractChart {
 
   render() {
     const paddingTop = 16
-    const paddingRight = 64
-    const { width, height, data, style = {} } = this.props
+    const { width, height, data, style = {}, chartConfig } = this.props
     const { borderRadius = 0 } = style
     const config = {
       width,
       height
     }
+    const { paddingRight, pre='' } = chartConfig;
+    const barWidth = (width - paddingRight) / data.length
     return (
       <View style={style}>
         <Svg
@@ -77,7 +77,9 @@ class BarChart extends AbstractChart {
             count: 4,
             data: data.datasets[0].data,
             paddingTop,
-            paddingRight
+            paddingRight,
+            type: 'bar',
+            pre
           })}
           {this.renderVerticalLabels({
             ...config,
@@ -92,12 +94,12 @@ class BarChart extends AbstractChart {
             paddingTop,
             paddingRight
           })}
-          {this.renderBarTops({
+          {/* {this.renderBarTops({
             ...config,
             data: data.datasets[0].data,
             paddingTop,
             paddingRight
-          })}
+          })} */}
         </Svg>
       </View>
     )

@@ -23,7 +23,7 @@ class LineChart extends AbstractChart {
             key={Math.random()}
             cx={paddingRight + (i * (width - paddingRight) / dataset.data.length)}
             cy={((height / 4 * 3 * (1 - ((x - Math.min(...dataset.data)) / this.calcScaler(dataset.data)))) + paddingTop)}
-            r="4"
+            r="2"
             fill={this.props.chartConfig.color(0.7)}
           />)
       })
@@ -158,10 +158,10 @@ class LineChart extends AbstractChart {
 
   render() {
     const paddingTop = 16
-    const paddingRight = 64
     const { width, height, data, withShadow = true, withDots = true, style = {} } = this.props
     const { labels = [] } = data
     const { borderRadius = 0 } = style
+    const { paddingRight, pre='' } = this.props.chartConfig
     const config = {
       width,
       height
@@ -195,7 +195,8 @@ class LineChart extends AbstractChart {
                 1 : 4,
               data: data.datasets[0].data,
               paddingTop,
-              paddingRight
+              paddingRight,
+              pre
             })}
             {this.renderVerticalLines({
               ...config,
